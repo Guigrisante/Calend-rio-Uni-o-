@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Controle de Pedidos</title>
+<style>
+  body{
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    background:#f6f7fb;
+    margin:0; padding:24px;
+    color:#222;
+  }
+  .container{ max-width:1100px; margin:0 auto; }
+  h1{ margin:0 0 18px; }
+  .card{
+    background:white;
+    border-radius:10px;
+    padding:16px;
+    box-shadow: 0 6px 18px rgba(30,40,60,0.06);
+  }
+  form{ display:flex; flex-wrap:wrap; gap:12px; align-items:end; }
+  label{ display:block; font-size:13px; color:#555; margin-bottom:4px; }
+  input, select{ padding:8px 10px; border:1px solid #ccc; border-radius:8px; }
+  input[type=color]{ width:48px; height:36px; padding:0; border:none; background:transparent; }
+  button{ background:#2b6ef6; color:white; border:0; padding:9px 12px; border-radius:8px; cursor:pointer; }
+  button.ghost{ background:transparent; color:#2b6ef6; border:1px solid rgba(43,110,246,0.2); }
+  table{ width:100%; border-collapse:collapse; margin-top:18px; }
+  th,td{ padding:10px; border-bottom:1px solid #eee; text-align:left; vertical-align:middle; }
+  th{ color:#666; font-size:13px; }
+  .color-swatch{ width:28px; height:20px; border-radius:4px; border:1px solid rgba(0,0,0,0.1); display:inline-block; }
+  .items-table td{ border:0; padding:4px 10px; font-size:14px; }
+  .subcard{ background:#fafafa; border-radius:6px; padding:8px; margin-top:6px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Controle de Pedidos</h1>
+  <div class="card">
+    <form id="orderForm">
+      <div>
+        <label>Data</label>
+        <input type="date" id="date" required />
+      </div>
+      <div>
+        <label>Nº do Pedido</label>
+        <input type="text" id="orderNumber" placeholder="ex: 12345" required />
+      </div>
+
+      <div id="itemsArea" style="flex-basis:100%;margin-top:10px;">
+        <label>Itens do Pedido:</label>
+        <div id="itemsList"></div>
+        <button type="button" id="addItemBtn" class="ghost">+ Adicionar item</button>
+      </div>
+
+      <div style="flex-basis:100%;margin-top:10px;">
+        <button type="submit">Salvar pedido</button>
+        <button type="button" id="clearAll" class="ghost">Limpar tudo</button>
+      </div>
+    </form>
+
+    <table id="ordersTable">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Nº do Pedido</th>
+          <th>Itens</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="ordersBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = "ordersDB:v2";
+const form = document.getElementById("orderForm");
+const dateInput = document.getElementById("date");
+const orderNumberInput = document.getElementById("orderNumber");
+const itemsList = document.getElementById("itemsList");
+const addItemBtn = document.getElementById("addItemBtn");
+const ordersBody = document.getElementById("ordersBody");
+const clearAllBtn = document.getElementById("clearAll");
+
+let orders = loadOrders();
+
+// Definir data de hoje
+(function setToday(){
+  const t = new Date();
+  dateInput.value = t.toISOString().split("T")[0];
+})();
+
+function loadOrders(){
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch { return []; }
+}
+function saveOrders(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+}
+
+function addItemRow(q=1,c="#7f5af0"){
+  const div = document.createElement("div");
+  div.className = "subcard";
+  div.innerHTML = `
+    <label>Qtd</label>
+    <input type="number" class="itemQty" min="1" value="${q}" style="width:80px;" />
+    <label style="margin-left:10px;">Cor</label>
+    <input type="color" class="itemColor" value="${c}" />
+    <button type="button" class="ghost removeItemBtn" style="margin-left:10px;">Remover</button>
+  `;
+  div.querySelector(".removeItemBtn").onclick = ()=>div.remove();
+  itemsList.appendChild(div);
+}
+addItemBtn.onclick = ()=>addItemRow();
+
+form.onsubmit = e=>{
+  e.preventDefault();
+  const number = orderNumberInput.value.trim();
+  if(!number){ alert("Informe o número do pedido."); return; }
+
+  const items = [...itemsList.querySelectorAll(".subcard")].map(div=>{
+    return {
+      qty: Number(div.querySelector(".itemQty").value),
+      color: div.querySelector(".itemColor").value
+    };
+  }).filter(i=>i.qty>0);
+
+  if(items.length===0){ alert("Adicione pelo menos um item."); return; }
+
+  const order = {
+    id: Date.now().toString(36),
+    date: dateInput.value,
+    number,
+    items
+  };
+
+  orders.unshift(order);
+  saveOrders();
+  renderOrders();
+  form.reset();
+  itemsList.innerHTML = "";
+  addItemRow();
+  const t = new Date(); dateInput.value = t.toISOString().split("T")[0];
+};
+
+clearAllBtn.onclick = ()=>{
+  if(confirm("Apagar todos os pedidos?")){
+    orders = []; saveOrders(); renderOrders();
+  }
+};
+
+function renderOrders(){
+  ordersBody.innerHTML = "";
+  if(!orders.length){
+    ordersBody.innerHTML = `<tr><td colspan="4">Nenhum pedido.</td></tr>`;
+    return;
+  }
+  orders.forEach(order=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${order.date}</td>
+      <td>${order.number}</td>
+      <td>${renderItems(order.items)}</td>
+      <td>
+        <button type="button" class="ghost editBtn">Editar</button>
+        <button type="button" class="ghost deleteBtn">Excluir</button>
+      </td>
+    `;
+    tr.querySelector(".deleteBtn").onclick = ()=>{ 
+      if(confirm("Excluir este pedido?")){
+        orders = orders.filter(o=>o.id!==order.id);
+        saveOrders(); renderOrders();
+      }
+    };
+    tr.querySelector(".editBtn").onclick = ()=>editOrder(order.id);
+    ordersBody.appendChild(tr);
+  });
+}
+
+function renderItems(items){
+  return `<table class="items-table">${items.map(i=>`
+    <tr>
+      <td>${i.qty}</td>
+      <td><span class="color-swatch" style="background:${i.color}"></span></td>
+    </tr>`).join("")}</table>`;
+}
+
+function editOrder(id){
+  const order = orders.find(o=>o.id===id);
+  if(!order) return;
+
+  if(!confirm("Carregar este pedido para edição? (As alterações substituirão o pedido salvo)")) return;
+
+  orderNumberInput.value = order.number;
+  dateInput.value = order.date;
+  itemsList.innerHTML = "";
+  order.items.forEach(i=>addItemRow(i.qty,i.color));
+  // remover o antigo
+  orders = orders.filter(o=>o.id!==id);
+  saveOrders();
+  renderOrders();
+}
+
+addItemRow();
+renderOrders();
+</script>
+</body>
+</html>
