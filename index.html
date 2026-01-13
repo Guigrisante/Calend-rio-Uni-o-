@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Calendário 2026 – União</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+}
+.mes {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+.evento {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+.evento:last-child {
+    border-bottom: none;
+}
+.realizado {
+    background: #d4edda;
+    padding: 10px;
+    border-radius: 6px;
+}
+button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📅 Calendário 2026 – União</h1>
+
+<div id="calendario"></div>
+
+<script>
+const eventos = [
+  {id:1, mes:"Janeiro", texto:"17/01 – 18h | Homenagem a Oxóssi e Chegada dos Caboclos | Org: Liliane, Katia, Heloisa e Jailson"},
+  {id:2, mes:"Janeiro", texto:"31/01 – 18h | Canja de Oxalá com Pretos Velhos e Erês | Org: Cida, Leni, Jhennifer e Thainá"},
+
+  {id:3, mes:"Fevereiro", texto:"13/02 – 20h | Gira de Fechamento de Corpo – Festa de Exu | Org: Fran, Vanessa, Geovanna e Guilherme II"},
+  {id:4, mes:"Fevereiro", texto:"28/02 – 14h | Reunião e organização do terreiro"},
+
+  {id:5, mes:"Março", texto:"07/03 – 18h | Jantar com Marinheiros – Abertura Caboclos"},
+  {id:6, mes:"Março", texto:"21/03 – 18h | Jantar com Boiadeiros – Abertura Pretos Velhos"},
+
+  {id:7, mes:"Abril", texto:"02/04 – 20h | Quinta Feira Maior – Festa de Pomba Gira | Org: Liliane, Tati, Nayara, Guilherme I e Reginaldo"},
+  {id:8, mes:"Abril", texto:"18/04 – 18h | Homenagem a Ogum – Caboclos e Baianos | Org: Fran, Katia, Edinei e João"},
+
+  {id:9, mes:"Maio", texto:"02/05 – 18h | Caboclos e Boiadeiros"},
+  {id:10, mes:"Maio", texto:"16/05 – 18h | Festa de Pretos Velhos e Erês | Org: Cida, Jaque, Fátima e Vado"},
+  {id:11, mes:"Maio", texto:"31/05 – 18h | Festa de Ciganos – Abertura Caboclos | Org: Liliane, Welber, Renata e Douglas"},
+
+  {id:12, mes:"Junho", texto:"14/06 – 06h | Encontro dos Orixás – Santuário"},
+  {id:13, mes:"Junho", texto:"27/06 – 18h | Exu, Pomba Gira e Exu Mirim"},
+
+  {id:14, mes:"Agosto", texto:"01/08 – 18h | Pretos Velhos e Marinheiros"},
+  {id:15, mes:"Agosto", texto:"15/08 – 18h | Aniversário da União | Org: Fran, Heloísa, Vanessa e Dora"},
+  {id:16, mes:"Agosto", texto:"29/08 – 18h | Exu, Pomba Gira e Exu"},
+
+  {id:17, mes:"Setembro", texto:"12/09 – 18h | Caboclos, Baianos e Cangaceiros"},
+  {id:18, mes:"Setembro", texto:"26/09 – 16h | Festa de Cosme e Damião | Org: Cris, Sofia, Iara, Bárbara e Igor"},
+
+  {id:19, mes:"Outubro", texto:"03/10 – 18h | Festa de Marinheiros – Abertura Pretos Velhos"},
+  {id:20, mes:"Outubro", texto:"17/10 – 18h | Festa de Boiadeiros – Abertura Caboclos"},
+
+  {id:21, mes:"Novembro", texto:"07/11 – 18h | Festa de Baianos e Cangaceiros"},
+  {id:22, mes:"Novembro", texto:"21/11 – 18h | Festa de Exu Mirim – Encerramento"},
+
+  {id:23, mes:"Dezembro", texto:"06/12 – 04h | Encerramento na Praia – Homenagem a Iemanjá"}
+];
+
+const calendario = document.getElementById("calendario");
+const realizados = JSON.parse(localStorage.getItem("realizados")) || [];
+
+function salvar() {
+  localStorage.setItem("realizados", JSON.stringify(realizados));
+}
+
+function toggle(id) {
+  const index = realizados.indexOf(id);
+  if (index === -1) {
+    realizados.push(id);
+  } else {
+    realizados.splice(index, 1);
+  }
+  salvar();
+  render();
+}
+
+function render() {
+  calendario.innerHTML = "";
+  const meses = [...new Set(eventos.map(e => e.mes))];
+
+  meses.forEach(mes => {
+    const divMes = document.createElement("div");
+    divMes.className = "mes";
+    divMes.innerHTML = `<h2>${mes}</h2>`;
+
+    eventos.filter(e => e.mes === mes).forEach(ev => {
+      const feito = realizados.includes(ev.id);
+      const divEvento = document.createElement("div");
+      divEvento.className = "evento" + (feito ? " realizado" : "");
+      divEvento.innerHTML = `
+        <p>${ev.texto}</p>
+        <button onclick="toggle(${ev.id})">
+          ${feito ? "Desmarcar" : "Marcar como realizado"}
+        </button>
+      `;
+      divMes.appendChild(divEvento);
+    });
+
+    calendario.appendChild(divMes);
+  });
+}
+
+render();
+</script>
+
+</body>
+</html>
+    
+  </body>
+  
+</html>
