@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Untitled</title>
+    <title>Calendário 2026</title>
     
 
   </head>
@@ -13,129 +13,165 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Calendário 2026 – União</title>
+<title>Calendário 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #f2f2f2;
+  padding: 10px;
 }
 h1 {
-    text-align: center;
+  text-align: center;
+}
+select {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  font-size: 16px;
 }
 .mes {
-    background: #fff;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+  background: #fff;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  padding: 10px;
+}
+.mes h2 {
+  background: #222;
+  color: #fff;
+  padding: 8px;
+  border-radius: 6px;
 }
 .evento {
-    border-bottom: 1px solid #ddd;
-    padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  padding: 8px 0;
 }
 .evento:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 .realizado {
-    background: #d4edda;
-    padding: 10px;
-    border-radius: 6px;
+  text-decoration: line-through;
+  color: green;
 }
 button {
-    margin-top: 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+  margin-top: 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+}
+button.ok {
+  background: green;
 }
 </style>
 </head>
 
 <body>
 
-<h1>📅 Calendário 2026 – União</h1>
+<h1>📅 Calendário 2026</h1>
+
+<select id="filtro">
+  <option value="Todos">Todos</option>
+  <option value="Caboclos">Caboclos</option>
+  <option value="Pretos Velhos">Pretos Velhos</option>
+  <option value="Exu">Exu / Pomba Gira</option>
+  <option value="Orixás">Orixás</option>
+  <option value="Erês">Erês</option>
+  <option value="Reunião">Reunião</option>
+  <option value="Festa">Festa</option>
+</select>
 
 <div id="calendario"></div>
 
 <script>
 const eventos = [
-  {id:1, mes:"Janeiro", texto:"17/01 – 18h | Homenagem a Oxóssi e Chegada dos Caboclos | Org: Liliane, Katia, Heloisa e Jailson"},
-  {id:2, mes:"Janeiro", texto:"31/01 – 18h | Canja de Oxalá com Pretos Velhos e Erês | Org: Cida, Leni, Jhennifer e Thainá"},
+  {mes:"Janeiro", texto:"17/01 - 18h - Homenagem a Oxóssi", tipo:"Orixás"},
+  {mes:"Janeiro", texto:"31/01 - 18h - Canja de Oxalá", tipo:"Orixás"},
 
-  {id:3, mes:"Fevereiro", texto:"13/02 – 20h | Gira de Fechamento de Corpo – Festa de Exu | Org: Fran, Vanessa, Geovanna e Guilherme II"},
-  {id:4, mes:"Fevereiro", texto:"28/02 – 14h | Reunião e organização do terreiro"},
+  {mes:"Fevereiro", texto:"13/02 - 20h - Festa de Exu", tipo:"Exu"},
+  {mes:"Fevereiro", texto:"28/02 - 14h - Reunião do Terreiro", tipo:"Reunião"},
 
-  {id:5, mes:"Março", texto:"07/03 – 18h | Jantar com Marinheiros – Abertura Caboclos"},
-  {id:6, mes:"Março", texto:"21/03 – 18h | Jantar com Boiadeiros – Abertura Pretos Velhos"},
+  {mes:"Março", texto:"07/03 - 18h - Marinheiros", tipo:"Festa"},
+  {mes:"Março", texto:"21/03 - 18h - Boiadeiros / Xangô", tipo:"Orixás"},
 
-  {id:7, mes:"Abril", texto:"02/04 – 20h | Quinta Feira Maior – Festa de Pomba Gira | Org: Liliane, Tati, Nayara, Guilherme I e Reginaldo"},
-  {id:8, mes:"Abril", texto:"18/04 – 18h | Homenagem a Ogum – Caboclos e Baianos | Org: Fran, Katia, Edinei e João"},
+  {mes:"Abril", texto:"02/04 - 20h - Festa de Pomba Gira", tipo:"Exu"},
+  {mes:"Abril", texto:"18/04 - 18h - Ogum", tipo:"Orixás"},
 
-  {id:9, mes:"Maio", texto:"02/05 – 18h | Caboclos e Boiadeiros"},
-  {id:10, mes:"Maio", texto:"16/05 – 18h | Festa de Pretos Velhos e Erês | Org: Cida, Jaque, Fátima e Vado"},
-  {id:11, mes:"Maio", texto:"31/05 – 18h | Festa de Ciganos – Abertura Caboclos | Org: Liliane, Welber, Renata e Douglas"},
+  {mes:"Maio", texto:"02/05 - 18h - Caboclos e Boiadeiros", tipo:"Caboclos"},
+  {mes:"Maio", texto:"16/05 - 18h - Pretos Velhos e Erês", tipo:"Pretos Velhos"},
+  {mes:"Maio", texto:"30/05 - 18h - Ciganos", tipo:"Festa"},
 
-  {id:12, mes:"Junho", texto:"14/06 – 06h | Encontro dos Orixás – Santuário"},
-  {id:13, mes:"Junho", texto:"27/06 – 18h | Exu, Pomba Gira e Exu Mirim"},
+  {mes:"Junho", texto:"14/06 - 06h - Encontro dos Orixás", tipo:"Orixás"},
+  {mes:"Junho", texto:"27/06 - 18h - Exu e Pomba Gira", tipo:"Exu"},
 
-  {id:14, mes:"Agosto", texto:"01/08 – 18h | Pretos Velhos e Marinheiros"},
-  {id:15, mes:"Agosto", texto:"15/08 – 18h | Aniversário da União | Org: Fran, Heloísa, Vanessa e Dora"},
-  {id:16, mes:"Agosto", texto:"29/08 – 18h | Exu, Pomba Gira e Exu"},
+  {mes:"Julho", texto:"Férias", tipo:"Reunião"},
 
-  {id:17, mes:"Setembro", texto:"12/09 – 18h | Caboclos, Baianos e Cangaceiros"},
-  {id:18, mes:"Setembro", texto:"26/09 – 16h | Festa de Cosme e Damião | Org: Cris, Sofia, Iara, Bárbara e Igor"},
+  {mes:"Agosto", texto:"01/08 - 18h - Pretos Velhos", tipo:"Pretos Velhos"},
+  {mes:"Agosto", texto:"15/08 - 18h - Aniversário da União", tipo:"Festa"},
+  {mes:"Agosto", texto:"29/08 - 18h - Exu", tipo:"Exu"},
 
-  {id:19, mes:"Outubro", texto:"03/10 – 18h | Festa de Marinheiros – Abertura Pretos Velhos"},
-  {id:20, mes:"Outubro", texto:"17/10 – 18h | Festa de Boiadeiros – Abertura Caboclos"},
+  {mes:"Setembro", texto:"12/09 - 18h - Caboclos", tipo:"Caboclos"},
+  {mes:"Setembro", texto:"26/09 - 16h - Cosme e Damião", tipo:"Erês"},
 
-  {id:21, mes:"Novembro", texto:"07/11 – 18h | Festa de Baianos e Cangaceiros"},
-  {id:22, mes:"Novembro", texto:"21/11 – 18h | Festa de Exu Mirim – Encerramento"},
+  {mes:"Outubro", texto:"03/10 - 18h - Marinheiros", tipo:"Festa"},
+  {mes:"Outubro", texto:"17/10 - 18h - Boiadeiros / Oxum", tipo:"Orixás"},
 
-  {id:23, mes:"Dezembro", texto:"06/12 – 04h | Encerramento na Praia – Homenagem a Iemanjá"}
+  {mes:"Novembro", texto:"07/11 - 18h - Baianos", tipo:"Festa"},
+  {mes:"Novembro", texto:"21/11 - 18h - Exu Mirim", tipo:"Exu"},
+
+  {mes:"Dezembro", texto:"06/12 - 04h - Iemanjá e Iansã", tipo:"Orixás"}
 ];
 
+const feitos = JSON.parse(localStorage.getItem("feitos")) || {};
 const calendario = document.getElementById("calendario");
-const realizados = JSON.parse(localStorage.getItem("realizados")) || [];
-
-function salvar() {
-  localStorage.setItem("realizados", JSON.stringify(realizados));
-}
-
-function toggle(id) {
-  const index = realizados.indexOf(id);
-  if (index === -1) {
-    realizados.push(id);
-  } else {
-    realizados.splice(index, 1);
-  }
-  salvar();
-  render();
-}
+const filtro = document.getElementById("filtro");
 
 function render() {
   calendario.innerHTML = "";
-  const meses = [...new Set(eventos.map(e => e.mes))];
+  const tipo = filtro.value;
+  const meses = {};
 
-  meses.forEach(mes => {
+  eventos.forEach((e, i) => {
+    if (tipo !== "Todos" && e.tipo !== tipo) return;
+    if (!meses[e.mes]) meses[e.mes] = [];
+    meses[e.mes].push({ ...e, id: i });
+  });
+
+  for (let mes in meses) {
     const divMes = document.createElement("div");
     divMes.className = "mes";
     divMes.innerHTML = `<h2>${mes}</h2>`;
 
-    eventos.filter(e => e.mes === mes).forEach(ev => {
-      const feito = realizados.includes(ev.id);
-      const divEvento = document.createElement("div");
-      divEvento.className = "evento" + (feito ? " realizado" : "");
-      divEvento.innerHTML = `
-        <p>${ev.texto}</p>
-        <button onclick="toggle(${ev.id})">
-          ${feito ? "Desmarcar" : "Marcar como realizado"}
-        </button>
-      `;
-      divMes.appendChild(divEvento);
+    meses[mes].forEach(ev => {
+      const div = document.createElement("div");
+      div.className = "evento";
+
+      const txt = document.createElement("div");
+      txt.textContent = ev.texto;
+      if (feitos[ev.id]) txt.classList.add("realizado");
+
+      const btn = document.createElement("button");
+      btn.textContent = feitos[ev.id] ? "✔ Realizado" : "Marcar";
+      if (feitos[ev.id]) btn.classList.add("ok");
+
+      btn.onclick = () => {
+        feitos[ev.id] = !feitos[ev.id];
+        localStorage.setItem("feitos", JSON.stringify(feitos));
+        render();
+      };
+
+      div.appendChild(txt);
+      div.appendChild(btn);
+      divMes.appendChild(div);
     });
 
     calendario.appendChild(divMes);
-  });
+  }
 }
 
+filtro.onchange = render;
 render();
 </script>
 
