@@ -1,225 +1,335 @@
-<!DOCTYPE html>
-<html lang="en">
-
-  <head>
-    <meta charset="UTF-8">
-    <title>Controle de Pedidos </title>
-    
-
-  </head>
-    
-  <body>
-  <!doctype html>
+<!doctype html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Controle de Pedidos</title>
-<style>
-  body{
-    font-family: "Segoe UI", Roboto, Arial, sans-serif;
-    background:#f6f7fb;
-    margin:0; padding:24px;
-    color:#222;
-  }
-  .container{ max-width:1100px; margin:0 auto; }
-  h1{ margin:0 0 18px; }
-  .card{
-    background:white;
-    border-radius:10px;
-    padding:16px;
-    box-shadow: 0 6px 18px rgba(30,40,60,0.06);
-  }
-  form{ display:flex; flex-wrap:wrap; gap:12px; align-items:end; }
-  label{ display:block; font-size:13px; color:#555; margin-bottom:4px; }
-  input, select{ padding:8px 10px; border:1px solid #ccc; border-radius:8px; }
-  input[type=color]{ width:48px; height:36px; padding:0; border:none; background:transparent; }
-  button{ background:#2b6ef6; color:white; border:0; padding:9px 12px; border-radius:8px; cursor:pointer; }
-  button.ghost{ background:transparent; color:#2b6ef6; border:1px solid rgba(43,110,246,0.2); }
-  table{ width:100%; border-collapse:collapse; margin-top:18px; }
-  th,td{ padding:10px; border-bottom:1px solid #eee; text-align:left; vertical-align:middle; }
-  th{ color:#666; font-size:13px; }
-  .color-swatch{ width:28px; height:20px; border-radius:4px; border:1px solid rgba(0,0,0,0.1); display:inline-block; }
-  .items-table td{ border:0; padding:4px 10px; font-size:14px; }
-  .subcard{ background:#fafafa; border-radius:6px; padding:8px; margin-top:6px; }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2b6b3f">
+  <meta name="description"
+    content="Calendário União espirita 2026 — acompanhamento de trabalhos, estudos e agenda do terreiro.">
+  <title>Calendário União espirita</title>
+  <link rel="icon" href="assets/icons/logo.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
+
 <body>
-<div class="container">
-  <h1>Controle de Pedidos</h1>
-  <div class="card">
-    <form id="orderForm">
+  <div class="ambient" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
       <div>
-        <label>Data</label>
-        <input type="date" id="date" required />
+        <strong>UNIÃO ESPIRITA</strong>
+        <span>Axé • Luz • Fé</span>
       </div>
+    </div>
+
+    <nav class="nav" aria-label="Navegação principal">
+      <button class="nav__item is-active" data-view="inicio">⌂ <span>Início</span></button>
+      <button class="nav__item" data-view="calendario">▣ <span>Calendário</span></button>
+      <button class="nav__item" data-view="trabalhos">✓ <span>Trabalhos</span></button>
+      <button class="nav__item" data-view="progresso">◔ <span>Progresso</span></button>
+
+      <div class="nav__group">
+        <div class="nav__label">ESTUDOS</div>
+        <button class="nav__item" data-view="oracoes">✦ <span>Orações</span></button>
+        <button class="nav__item" data-view="defumacoes">♨ <span>Defumações</span></button>
+        <button class="nav__item" data-view="banhos">♒ <span>Banhos</span></button>
+      </div>
+
+      <div class="nav__group">
+        <div class="nav__label">AGENDA DO TERREIRO</div>
+        <button class="nav__item" data-view="festas">★ <span>Festas</span></button>
+        <button class="nav__item" data-view="reunioes">☷ <span>Reuniões</span></button>
+        <button class="nav__item" data-view="limpezas">✧ <span>Limpezas</span></button>
+      </div>
+
+      <button class="nav__item" data-view="configuracoes">⚙ <span>Configurações</span></button>
+    </nav>
+
+    <blockquote class="sidebar__quote">
+      “Que a luz dos Orixás ilumine seus caminhos e fortaleça sua caminhada.”
+    </blockquote>
+  </aside>
+
+  <div class="app-shell">
+    <header class="topbar">
+      <button class="icon-button mobile-only" id="menuToggle" aria-label="Abrir menu">☰</button>
       <div>
-        <label>Nº do Pedido</label>
-        <input type="text" id="orderNumber" placeholder="ex: 12345" required />
+        <p class="eyebrow">Calendário espiritual</p>
+        <h1 id="pageTitle">Início</h1>
       </div>
-
-      <div id="itemsArea" style="flex-basis:100%;margin-top:10px;">
-        <label>Itens do Pedido:</label>
-        <div id="itemsList"></div>
-        <button type="button" id="addItemBtn" class="ghost">+ Adicionar item</button>
+      <div class="topbar__actions">
+        <span class="today" id="todayLabel"></span>
       </div>
+    </header>
 
-      <div style="flex-basis:100%;margin-top:10px;">
-        <button type="submit">Salvar pedido</button>
-        <button type="button" id="clearAll" class="ghost">Limpar tudo</button>
-      </div>
-    </form>
+    <main class="main">
+      <!-- INÍCIO -->
+      <section class="view is-visible" data-view-panel="inicio">
+        <div class="hero">
+          <div>
+            <p class="eyebrow">2026</p>
+            <h2>Calendário União</h2>
+            <p>Acompanhe trabalhos, marque os que já aconteceram e mantenha estudos e agenda organizados em um só lugar.
+            </p>
+          </div>
+        </div>
 
-    <table id="ordersTable">
-      <thead>
-        <tr>
-          <th>Data</th>
-          <th>Nº do Pedido</th>
-          <th>Itens</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="ordersBody"></tbody>
-    </table>
+        <div class="stats-grid">
+          <article class="card progress-card">
+            <div class="card__header">
+              <h3>Seu progresso</h3>
+              <span class="badge" id="progressBadge">0%</span>
+            </div>
+            <div class="progress-ring" id="progressRing" style="--progress:0">
+              <div class="progress-ring__inner">
+                <strong id="progressPercent">0%</strong>
+                <span>concluído</span>
+              </div>
+            </div>
+            <p class="muted center"><strong id="doneCount">0</strong> de <strong id="totalCount">0</strong> trabalhos
+            </p>
+          </article>
+
+          <article class="card next-card">
+            <div class="card__header">
+              <h3>Próximo trabalho</h3><span class="badge badge--gold">Agenda</span>
+            </div>
+            <div id="nextWork"></div>
+          </article>
+
+          <article class="card">
+            <div class="card__header">
+              <h3>Resumo</h3>
+            </div>
+            <div class="summary-list">
+              <div><span>Festas na agenda</span><strong id="summaryFestas">0</strong></div>
+              <div><span>Reuniões</span><strong id="summaryReunioes">0</strong></div>
+              <div><span>Limpezas</span><strong id="summaryLimpezas">0</strong></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Atalhos</p>
+            <h2>Acesso rápido</h2>
+          </div>
+        </div>
+        <div class="quick-grid">
+          <button class="quick-card" data-go="calendario"><span>▣</span><strong>Calendário</strong><small>Ver o ano
+              completo</small></button>
+          <button class="quick-card" data-go="oracoes"><span>✦</span><strong>Orações</strong><small>Área de
+              estudos</small></button>
+          <button class="quick-card" data-go="festas"><span>★</span><strong>Agenda</strong><small>Festas e
+              compromissos</small></button>
+          <button class="quick-card" data-go="progresso"><span>◔</span><strong>Progresso</strong><small>Acompanhar
+              presença</small></button>
+        </div>
+      </section>
+
+      <!-- CALENDÁRIO -->
+      <section class="view" data-view-panel="calendario">
+        <div class="toolbar">
+          <div class="search-wrap">
+            <input id="calendarSearch" type="search" placeholder="Pesquisar trabalho, responsável ou mês...">
+          </div>
+          <select id="monthFilter" aria-label="Filtrar por mês">
+            <option value="todos">Todos os meses</option>
+          </select>
+        </div>
+        <div id="calendarList" class="month-list"></div>
+      </section>
+
+      <!-- TRABALHOS -->
+      <section class="view" data-view-panel="trabalhos">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Checklist</p>
+            <h2>Todos os trabalhos</h2>
+          </div>
+          <button class="button button--ghost" id="showPendingOnly">Mostrar pendentes</button>
+        </div>
+        <div id="worksTableWrap"></div>
+      </section>
+
+      <!-- PROGRESSO -->
+      <section class="view" data-view-panel="progresso">
+        <div class="stats-grid progress-overview">
+          <article class="card">
+            <p class="eyebrow">Presença</p>
+            <h3 id="progressHeadline">0 de 0 concluídos</h3>
+            <div class="bar"><span id="mainProgressBar" style="width:0%"></span></div>
+          </article>
+          <article class="card">
+            <p class="eyebrow">Restantes</p>
+            <h3 id="pendingHeadline">0 trabalhos</h3>
+            <p class="muted">Marque no calendário conforme os trabalhos forem acontecendo.</p>
+          </article>
+        </div>
+        <div class="card">
+          <div class="card__header">
+            <h3>Progresso por mês</h3>
+          </div>
+          <div id="monthlyProgress"></div>
+        </div>
+      </section>
+
+      <!-- ESTUDOS -->
+      <section class="view" data-view-panel="oracoes">
+        <div class="study-intro">
+          <p class="eyebrow">Estudos</p>
+          <h2>Orações pros Orixás</h2>
+        </div>
+        <div id="oracoesList" class="content-grid"></div>
+      </section>
+
+      <section class="view" data-view-panel="defumacoes">
+        <div class="study-intro">
+          <p class="eyebrow">Estudos</p>
+          <h2>Defumações</h2>
+          <p>Conteúdo de referência. Adapte ingredientes e formas de uso conforme a orientação do seu terreiro.</p>
+        </div>
+        <div id="defumacoesList" class="content-grid"></div>
+      </section>
+
+      <section class="view" data-view-panel="banhos">
+        <div class="study-intro">
+          <p class="eyebrow">Estudos</p>
+          <h2>Banhos</h2>
+          <p>Conteúdo de referência para organização pessoal. Não ingerir plantas e interromper o uso em caso de
+            irritação.</p>
+        </div>
+        <div id="banhosList" class="content-grid"></div>
+      </section>
+
+      <!-- AGENDA -->
+      <section class="view" data-view-panel="festas">
+        <div class="agenda-layout">
+          <div>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Agenda</p>
+                <h2>Festas</h2>
+              </div>
+            </div>
+            <div id="festasList" class="agenda-list"></div>
+          </div>
+          <aside class="card agenda-form-card">
+            <h3>Adicionar festa</h3>
+            <form class="agenda-form" data-agenda-form="festa">
+              <input type="hidden" name="id">
+              <label>Título<input name="title" required placeholder="Ex.: Festa de Oxóssi"></label>
+              <div class="form-row"><label>Data<input name="date" type="date" required></label><label>Horário<input
+                    name="time" type="time"></label></div>
+              <label>Observação<textarea name="notes" rows="3"
+                  placeholder="Detalhes, responsáveis..."></textarea></label>
+              <div class="button-row">
+                <button class="button" type="submit">Adicionar</button>
+                <button class="button button--ghost agenda-cancel" type="button" hidden>Cancelar</button>
+              </div>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view-panel="reunioes">
+        <div class="agenda-layout">
+          <div>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Agenda</p>
+                <h2>Reuniões</h2>
+              </div>
+            </div>
+            <div id="reunioesList" class="agenda-list"></div>
+          </div>
+          <aside class="card agenda-form-card">
+            <h3>Adicionar reunião</h3>
+            <form class="agenda-form" data-agenda-form="reuniao">
+              <input type="hidden" name="id">
+              <label>Título<input name="title" required placeholder="Ex.: Reunião de médiuns"></label>
+              <div class="form-row"><label>Data<input name="date" type="date" required></label><label>Horário<input
+                    name="time" type="time"></label></div>
+              <label>Observação<textarea name="notes" rows="3"></textarea></label>
+              <div class="button-row">
+                <button class="button" type="submit">Adicionar</button>
+                <button class="button button--ghost agenda-cancel" type="button" hidden>Cancelar</button>
+              </div>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <section class="view" data-view-panel="limpezas">
+        <div class="agenda-layout">
+          <div>
+            <div class="section-heading">
+              <div>
+                <p class="eyebrow">Agenda</p>
+                <h2>Limpezas</h2>
+              </div>
+            </div>
+            <div id="limpezasList" class="agenda-list"></div>
+          </div>
+          <aside class="card agenda-form-card">
+            <h3>Adicionar limpeza</h3>
+            <form class="agenda-form" data-agenda-form="limpeza">
+              <input type="hidden" name="id">
+              <label>Título<input name="title" required placeholder="Ex.: Limpeza do salão"></label>
+              <div class="form-row"><label>Data<input name="date" type="date" required></label><label>Horário<input
+                    name="time" type="time"></label></div>
+              <label>Observação<textarea name="notes" rows="3"></textarea></label>
+              <div class="button-row">
+                <button class="button" type="submit">Adicionar</button>
+                <button class="button button--ghost agenda-cancel" type="button" hidden>Cancelar</button>
+              </div>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <!-- CONFIGURAÇÕES -->
+      <section class="view" data-view-panel="configuracoes">
+        <div class="settings-grid">
+          <article class="card">
+            <p class="eyebrow">Dados locais</p>
+            <h3>Marcações e agenda</h3>
+            <p class="muted">Os dados ficam salvos no navegador deste aparelho usando LocalStorage.</p>
+            <div class="button-row">
+              <button class="button button--ghost" id="exportData">Exportar backup</button>
+              <label class="button button--ghost file-button">Importar backup<input id="importData" type="file"
+                  accept="application/json"></label>
+            </div>
+          </article>
+          <article class="card card--danger">
+            <p class="eyebrow">Zona de atenção</p>
+            <h3>Limpar dados</h3>
+            <p class="muted">Remove marcações de trabalhos e itens adicionados à agenda.</p>
+            <button class="button button--danger" id="resetAll">Limpar tudo</button>
+          </article>
+        </div>
+      </section>
+    </main>
   </div>
-</div>
 
-<script>
-const STORAGE_KEY = "ordersDB:v2";
-const form = document.getElementById("orderForm");
-const dateInput = document.getElementById("date");
-const orderNumberInput = document.getElementById("orderNumber");
-const itemsList = document.getElementById("itemsList");
-const addItemBtn = document.getElementById("addItemBtn");
-const ordersBody = document.getElementById("ordersBody");
-const clearAllBtn = document.getElementById("clearAll");
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-let orders = loadOrders();
-
-// Definir data de hoje
-(function setToday(){
-  const t = new Date();
-  dateInput.value = t.toISOString().split("T")[0];
-})();
-
-function loadOrders(){
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-  } catch { return []; }
-}
-function saveOrders(){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
-}
-
-function addItemRow(q=1,c="#7f5af0"){
-  const div = document.createElement("div");
-  div.className = "subcard";
-  div.innerHTML = `
-    <label>Qtd</label>
-    <input type="number" class="itemQty" min="1" value="${q}" style="width:80px;" />
-    <label style="margin-left:10px;">Cor</label>
-    <input type="color" class="itemColor" value="${c}" />
-    <button type="button" class="ghost removeItemBtn" style="margin-left:10px;">Remover</button>
-  `;
-  div.querySelector(".removeItemBtn").onclick = ()=>div.remove();
-  itemsList.appendChild(div);
-}
-addItemBtn.onclick = ()=>addItemRow();
-
-form.onsubmit = e=>{
-  e.preventDefault();
-  const number = orderNumberInput.value.trim();
-  if(!number){ alert("Informe o número do pedido."); return; }
-
-  const items = [...itemsList.querySelectorAll(".subcard")].map(div=>{
-    return {
-      qty: Number(div.querySelector(".itemQty").value),
-      color: div.querySelector(".itemColor").value
-    };
-  }).filter(i=>i.qty>0);
-
-  if(items.length===0){ alert("Adicione pelo menos um item."); return; }
-
-  const order = {
-    id: Date.now().toString(36),
-    date: dateInput.value,
-    number,
-    items
-  };
-
-  orders.unshift(order);
-  saveOrders();
-  renderOrders();
-  form.reset();
-  itemsList.innerHTML = "";
-  addItemRow();
-  const t = new Date(); dateInput.value = t.toISOString().split("T")[0];
-};
-
-clearAllBtn.onclick = ()=>{
-  if(confirm("Apagar todos os pedidos?")){
-    orders = []; saveOrders(); renderOrders();
-  }
-};
-
-function renderOrders(){
-  ordersBody.innerHTML = "";
-  if(!orders.length){
-    ordersBody.innerHTML = `<tr><td colspan="4">Nenhum pedido.</td></tr>`;
-    return;
-  }
-  orders.forEach(order=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${order.date}</td>
-      <td>${order.number}</td>
-      <td>${renderItems(order.items)}</td>
-      <td>
-        <button type="button" class="ghost editBtn">Editar</button>
-        <button type="button" class="ghost deleteBtn">Excluir</button>
-      </td>
-    `;
-    tr.querySelector(".deleteBtn").onclick = ()=>{ 
-      if(confirm("Excluir este pedido?")){
-        orders = orders.filter(o=>o.id!==order.id);
-        saveOrders(); renderOrders();
-      }
-    };
-    tr.querySelector(".editBtn").onclick = ()=>editOrder(order.id);
-    ordersBody.appendChild(tr);
-  });
-}
-
-function renderItems(items){
-  return `<table class="items-table">${items.map(i=>`
-    <tr>
-      <td>${i.qty}</td>
-      <td><span class="color-swatch" style="background:${i.color}"></span></td>
-    </tr>`).join("")}</table>`;
-}
-
-function editOrder(id){
-  const order = orders.find(o=>o.id===id);
-  if(!order) return;
-
-  if(!confirm("Carregar este pedido para edição? (As alterações substituirão o pedido salvo)")) return;
-
-  orderNumberInput.value = order.number;
-  dateInput.value = order.date;
-  itemsList.innerHTML = "";
-  order.items.forEach(i=>addItemRow(i.qty,i.color));
-  // remover o antigo
-  orders = orders.filter(o=>o.id!==id);
-  saveOrders();
-  renderOrders();
-}
-
-addItemRow();
-renderOrders();
-</script>
+  <script defer src="assets/js/data/calendar.js"></script>
+  <script defer src="assets/js/data/studies.js"></script>
+  <script defer src="assets/js/data/agenda.js"></script>
+  <script defer src="assets/js/core/storage.js"></script>
+  <script defer src="assets/js/core/utils.js"></script>
+  <script defer src="assets/js/modules/calendar-module.js"></script>
+  <script defer src="assets/js/modules/studies-module.js"></script>
+  <script defer src="assets/js/modules/agenda-module.js"></script>
+  <script defer src="assets/js/modules/dashboard-module.js"></script>
+  <script defer src="assets/js/modules/settings-module.js"></script>
+  <script defer src="assets/js/app.js"></script>
 </body>
-</html>
-    
-  </body>
-  
+
 </html>
